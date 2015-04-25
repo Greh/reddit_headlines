@@ -20,17 +20,19 @@ let get = function (subreddit, callback, params) {
 
 module.exports.get = get;
 
-let counter = [1,2,3].entries();
+if (!module.parent) { // if not loaded as a module
+	let counter = [1,2,3,4,5].entries();
 
-let log = function (body) {
-	let after = body.data.after;
-	// console.log(after);
-	for (let post of body.data.children) {
-		console.log(post.data.title);
+	let log = function (body) {
+		let after = body.data.after;
+		// console.log(after);
+		for (let post of body.data.children) {
+			console.log(post.data.title);
+		}
+		if (counter.next().value) {
+			get('bjj', log, { after: after, limit: 100 });
+		}
 	}
-	if (counter.next().value) {
-		get('bjj', log, { after: after, limit: 100 });
-	}
+
+	get(process.argv[2], log, { limit: 100 });
 }
-
-get('bjj', log, { limit: 100 });
